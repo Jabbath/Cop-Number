@@ -48,7 +48,7 @@ def extractVertices(vertex):
     OUTPUT
     components: A list of of the vertices nested in vertex
     '''
-    
+
     #There are k - 1 nests because the tensor product is applied k-1 times
     levels = k - 1
     
@@ -86,9 +86,13 @@ def Gneighborhood(vertex):
     of the components of vertex
     '''
     neighborhood = set()
-
-    #We want to get every component of vertex. It is a nest of two tuples
-    subvertices = extractVertices(vertex)
+    
+    #Check if we are dealing with just one vertex
+    if not isinstance(vertex, tuple):
+        subvertices = [vertex]
+    else:
+        #We want to get every component of vertex. It is a nest of two tuples
+        subvertices = extractVertices(vertex)
     
     #Go through each vertex and get it's neighbors
     for vertex in subvertices:
@@ -105,9 +109,15 @@ P = kproduct(G)
 Pnodes = set(P.nodes())
 
 #Make a dict where the keys are vertices of P and entries are their G neighbors
-NG = {}
+NGP = {}
 
 for node in Pnodes:
+    NGP[str(node)] = Gneighborhood(node)
+
+#Now make a dict for the neighborhood of all the vertices of G
+NG = {}
+
+for node in Gnodes:
     NG[str(node)] = Gneighborhood(node)
 
 def NGSet(vertexSet):
@@ -125,8 +135,8 @@ def NGSet(vertexSet):
 
     #Add on each vertex's neighborhood
     for vertex in vertexSet:
-        setNeighborhood.update(set(nx.ego_graph(G, vertex).nodes()))
-
+        setNeighborhood.update(NG[str(vertex)])
+    
     return setNeighborhood
 
 
@@ -157,7 +167,7 @@ def checkChange(fOld, fNew):
 f = {}
 
 for node in Pnodes:
-    f[str(node)] = Gnodes - NG[str(node)]
+    f[str(node)] = Gnodes - NGP[str(node)]
 
 #Now we want to check update f according to property 2 on page 120
 #We want to keep updating until f stops changing or f(u) = {}
@@ -183,7 +193,6 @@ while changing:
             changing = False
             empty = True
             break
-
     
     #If we haven't already found an empty f(u) check if f has changed
     if not empty:
