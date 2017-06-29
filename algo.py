@@ -4,12 +4,15 @@ G, is less than or equal to k.
 '''
 import networkx as nx
 from copy import deepcopy
+import sys
+import time
 
-k = input('Enter a k to check: ')
+if len(sys.argv) != 3:
+    print 'The format for the arguments is: graphFileLocation k'
+    exit()
+k = int(sys.argv[2])
 
-#Test code for the 5 cycle graph
-#TODO: Implement user input graphs
-G = nx.petersen_graph()
+G = nx.read_multiline_adjlist(sys.argv[1])
 Gnodes = set(G.nodes())
 
 #Add self loops at each vertex
@@ -163,9 +166,11 @@ empty = False
 fOld = deepcopy(f)
 
 while changing:
-
+    
+    print 'Starting new f update'
     #Check if f has any extra values that don't fit prop 2
     for edge in P.edges():
+
         source = str(edge[0])
         target = str(edge[1])
 
@@ -178,6 +183,7 @@ while changing:
             changing = False
             empty = True
             break
+
     
     #If we haven't already found an empty f(u) check if f has changed
     if not empty:
