@@ -4,20 +4,6 @@ G, is less than or equal to k.
 '''
 import networkx as nx
 from copy import deepcopy
-import sys
-import time
-
-if len(sys.argv) != 3:
-    print 'The format for the arguments is: graphFileLocation k'
-    exit()
-k = int(sys.argv[2])
-
-G = nx.read_multiline_adjlist(sys.argv[1])
-Gnodes = set(G.nodes())
-
-#Add self loops at each vertex
-for node in G.nodes():
-    G.add_edge(node, node)
 
 def kproduct(graph):
     '''
@@ -27,14 +13,13 @@ def kproduct(graph):
     graph: A networkx graph
 
     OUTPUT
-    tens: The graph on which the tensor product has been applied k-1 times.
+    tensor: The graph on which the tensor product has been applied k-1 times.
     '''
-
     tensor = graph.copy()
 
     for i in range(0, k-1):
         tensor = nx.tensor_product(tensor, graph)
-        
+       
     return tensor
 
 def extractVertices(vertex):
@@ -103,23 +88,6 @@ def Gneighborhood(vertex):
     
     return neighborhood
 
-
-#Get the kth tensor product
-P = kproduct(G)
-Pnodes = set(P.nodes())
-
-#Make a dict where the keys are vertices of P and entries are their G neighbors
-NGP = {}
-
-for node in Pnodes:
-    NGP[str(node)] = Gneighborhood(node)
-
-#Now make a dict for the neighborhood of all the vertices of G
-NG = {}
-
-for node in Gnodes:
-    NG[str(node)] = Gneighborhood(node)
-
 def NGSet(vertexSet):
     '''
     Given a set of vertices in P, returns the union of 
@@ -163,53 +131,132 @@ def checkChange(fOld, fNew):
             break
 
     return dif
-#Create f given on page 120 of The Game of Cops and Robbers on Graphs
+
+def getCopNumber():
+    '''
+    Finds the cop number of G by the algorithm on pg. 122
+    of The Game of Cops and Robbers on Graphs.
+
+    OUTPUT
+    greater: True is the cop number is greater than k and false otherwise
+    '''
+    #Now we want to check update f according to property 2 on page 120
+    #We want to keep updating until f stops changing or f(u) = {}
+    changing = True
+    empty = False
+    fOld = deepcopy(f)
+
+    while changing:
+    
+        print 'Starting new f update'
+        #Check if f has any extra values that don't fit prop 2
+        for edge in P.edges():
+            source = str(edge[0])
+            target = str(edge[1])
+
+            #Update f
+            f[source] = f[source] & NGSet(f[target])
+            f[target] = f[target] & NGSet(f[source])
+        
+            #Stop if we have made an empty set
+            if len(f[source]) == 0 or len(f[target]) == 0:
+                changing = False
+                empty = True
+                break
+    
+        #If we haven't already found an empty f(u) check if f has changed
+        if not empty:
+        
+            #Stop if f hasn't changed
+            if not checkChange(fOld, f):
+                changing = False
+            else:
+                fOld = deepcopy(f)
+
+    #Now check if there are any empty values for f
+    if not empty:
+        for vertex in f:
+            if len(f[vertex]) == 0:
+                empty = True
+    
+    #The existence of empty values for f means the cop number <= k
+    if empty:
+        return False
+    else:
+        return True
+
+Gnodes = set()
+
+P = nx.Graph()
+Pnodes = set()
+
+NGP = {}
+NG = {}
 f = {}
 
-for node in Pnodes:
-    f[str(node)] = Gnodes - NGP[str(node)]
+def initGraph():
+    '''
+    Makes sure the initial graph is reflexive and creates the tensor
+    products, neighborhoods, and initializes f.
+    '''
+    #Let us use the globals for Gnodes, P, and Pnodes
+    global Gnodes
+    global P
+    global Pnodes
 
-#Now we want to check update f according to property 2 on page 120
-#We want to keep updating until f stops changing or f(u) = {}
-changing = True
-empty = False
-fOld = deepcopy(f)
+    Gnodes = set(G.nodes())
 
-while changing:
+    #Add self loops at each vertex
+    for node in G.nodes():
+        G.add_edge(node, node)
     
-    print 'Starting new f update'
-    #Check if f has any extra values that don't fit prop 2
-    for edge in P.edges():
+    #Get the kth tensor product
+    P = kproduct(G)
+    Pnodes = set(P.nodes())
 
-        source = str(edge[0])
-        target = str(edge[1])
+    #Make a dict where the keys are vertices of P and entries are their G neighbors
+    for node in Pnodes:
+        NGP[str(node)] = Gneighborhood(node)
 
-        #Update f
-        f[source] = f[source] & NGSet(f[target])
-        f[target] = f[target] & NGSet(f[source])
-        
-        #Stop if we have made an empty set
-        if len(f[source]) == 0 or len(f[target]) == 0:
-            changing = False
-            empty = True
-            break
+    #Now make a dict for the neighborhood of all the vertices of G
+    for node in Gnodes:
+        NG[str(node)] = Gneighborhood(node)
+
+    #Create f given on page 120 of The Game of Cops and Robbers on Graphs
+    for node in Pnodes:
+        f[str(node)] = Gnodes - NGP[str(node)]
+
+
+#If we are running from the cmd line use arguments
+if __name__ == '__main__':
+    import sys
     
-    #If we haven't already found an empty f(u) check if f has changed
-    if not empty:
-        
-        #Stop if f hasn't changed
-        if not checkChange(fOld, f):
-            changing = False
-        else:
-            fOld = deepcopy(f)
+    if len(sys.argv) != 3:
+        print 'The format for the arguments is: graphFileLocation k'
+        exit()
+    k = int(sys.argv[2])
 
-#Now check if there are any empty values for f
-if not empty:
-    for vertex in f:
-        if len(f[vertex]) == 0:
-            empty = True
+    G = nx.read_multiline_adjlist(sys.argv[1])
+    initGraph()
+    numK = getCopNumber()
 
-if empty:
-    print 'The cop number is <=', k
-else:
-    print 'The cop number is >', k
+    if numK:
+        print 'The cop number is >', k
+    else:
+        print 'The cop number is <=', k
+
+G = 0
+k = 0
+#Otherwise we are using a module
+def copk(graph, kVal):
+    global G, k
+    
+    #Set globals for the module
+    G = graph
+    k = kVal
+
+    #Create the initial values and find whether it fits
+    initGraph()
+    numK = getCopNumber()
+
+    return numK
