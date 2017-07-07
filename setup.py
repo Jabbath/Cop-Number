@@ -3,10 +3,9 @@ from distutils.core import setup
 setup(
     name = 'cop_number',
     packages = ['cop_number'],
-    version = '1.0.1',
+    version = '1.0.2',
     description = 'A NetworkX package solving k-FIXED COP NUMBER',
     long_description = 'A NetworkX graph theory package that calculates whether the cop number of a graph is larger than a fixed k.',
-    url = 'https://github.com/Jabbath/Cop-Number',
     license = 'MIT',
     author = 'Anton Afanassiev',
     author_email = 'antonafana@yahoo.ca',
