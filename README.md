@@ -27,3 +27,8 @@ result2 = copk(G, 2)
 result3 = copk(G, 3)
 #False
 ```
+## Contributing
+If you feel that you have something useful to add, feel free to submit a pull request.
+
+## License
+Licensed under the MIT license. See license.txt.
