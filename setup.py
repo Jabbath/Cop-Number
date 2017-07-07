@@ -10,7 +10,7 @@ setup(
     author = 'Anton Afanassiev',
     author_email = 'antonafana@yahoo.ca',
     url = 'https://github.com/Jabbath/Cop-Number',
-    download_url = 'https://github.com/Jabbath/Cop-Number/archive/1.0.1.tar.gz',
+    download_url = 'https://github.com/Jabbath/Cop-Number/archive/1.0.2.tar.gz',
     keywords = ['graph', 'theory', 'cop', 'number', 'k-FIXED', 'cops', 'robbers', 'pursuit', 'evasion', 'search'],
     classifiers = ['Development Status :: 5 - Production/Stable'],
     install_requires = ['networkx']
