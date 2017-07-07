@@ -22,6 +22,27 @@ def kproduct(graph):
        
     return tensor
 
+def isOriginal(vertex):
+    '''
+    Goes through all the vertices of the original graph G,
+    and checks if vertex is one of them.
+
+    INPUT
+    vertex: A hashable object representing a vertex
+    
+    OUTPUT
+    original: A boolean value on whether vertex is one of the originals
+    '''
+    original = False
+    
+    #Go through all of G's nodes and check if they are equal to vertex
+    for node in G.nodes():
+        if node == vertex:
+            original = True
+            break
+
+    return original
+
 def extractVertices(vertex):
     '''
     Given a vertex resulting from a tensor product,
@@ -48,7 +69,7 @@ def extractVertices(vertex):
     for i in range(0, levels):
         
         #If the current nest is not a tuple we have hit the last layer
-        if not isinstance(curNest, tuple):
+        if isOriginal(curNest):
             components.append(curNest)
             break
 
@@ -73,7 +94,7 @@ def Gneighborhood(vertex):
     neighborhood = set()
     
     #Check if we are dealing with just one vertex
-    if not isinstance(vertex, tuple):
+    if isOriginal(vertex):
         subvertices = [vertex]
     else:
         #We want to get every component of vertex. It is a nest of two tuples
