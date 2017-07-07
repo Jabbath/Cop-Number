@@ -5,16 +5,16 @@ greater than about 5 for even moderately sized graphs with 30 - 40 vertices. Cur
 If they are not reflexive, then self edges are added.
 
 ## Usage
-First, import the code:
+First, install the code from pip or the git repo:
 ```
-import copk from cop
+pip install cop-number
 ```
-Then, use a graph and a k to check for can be fed to copk. The function will return `True` if the cop number is greater
+Then, use a graph and a k with the `copk` function of `cop`. The function will return `True` if the cop number is greater
 than k, and `False` otherwise. See the example below.
 
 ```python
 import networkx as nx
-import copk from cop
+from cop_number.cop import copk
 
 G = nx.petersen_graph()
 

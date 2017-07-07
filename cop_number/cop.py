@@ -169,7 +169,7 @@ def getCopNumber():
 
     while changing:
     
-        print 'Starting new f update'
+        #print 'Starting new f update'
         #Check if f has any extra values that don't fit prop 2
         for edge in P.edges():
             source = str(edge[0])
