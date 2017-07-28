@@ -273,7 +273,7 @@ def copk(graph, kVal):
     global G, k
     
     #Set globals for the module
-    G = graph
+    G = graph.copy()
     k = kVal
 
     #Create the initial values and find whether it fits
@@ -281,3 +281,24 @@ def copk(graph, kVal):
     numK = getCopNumber()
 
     return numK
+
+def cop_num(graph):
+    '''
+    Given a graph, calculates it's cop number by repeatedly calling
+    copk until it returns false.
+
+    INPUT
+    graph: A networkx graph
+
+    OUTPUT
+    copNum: The cop number of graph
+    '''
+    copNum = 1
+    
+    #Call copk until it finds a value where copNum <= that value
+    while copk(graph, copNum):
+        copNum = copNum + 1
+
+    return copNum
+        
+

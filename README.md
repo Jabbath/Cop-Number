@@ -27,6 +27,20 @@ result2 = copk(G, 2)
 result3 = copk(G, 3)
 #False
 ```
+
+A function that automates the finding of cop number through `copk` has also been implemented.
+It can be used as follows:
+
+```python
+import networkx as nx
+from cop_number.cop import cop_num
+
+G = nx.petersen_graph()
+
+result = cop_num(G)
+#3
+```
+
 ## Contributing
 If you feel that you have something useful to add, feel free to submit a pull request.
 
