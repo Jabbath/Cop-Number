@@ -166,7 +166,7 @@ def getCopNumber():
     changing = True
     empty = False
     fOld = deepcopy(f)
-
+    
     while changing:
     
         #print 'Starting new f update'
@@ -207,7 +207,6 @@ def getCopNumber():
         return True
 
 Gnodes = set()
-
 P = nx.Graph()
 Pnodes = set()
 
@@ -221,9 +220,7 @@ def initGraph():
     products, neighborhoods, and initializes f.
     '''
     #Let us use the globals for Gnodes, P, and Pnodes
-    global Gnodes
-    global P
-    global Pnodes
+    global Gnodes, P, Pnodes, NGP, NG, f
 
     Gnodes = set(G.nodes())
 
@@ -234,6 +231,11 @@ def initGraph():
     #Get the kth tensor product
     P = kproduct(G)
     Pnodes = set(P.nodes())
+
+    #Make sure our globals are reset
+    NGP = {}
+    NG = {}
+    f = {}
 
     #Make a dict where the keys are vertices of P and entries are their G neighbors
     for node in Pnodes:
