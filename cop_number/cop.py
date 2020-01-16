@@ -255,7 +255,7 @@ if __name__ == '__main__':
     import sys
     
     if len(sys.argv) != 3:
-        print 'The format for the arguments is: graphFileLocation k'
+        print('The format for the arguments is: graphFileLocation k')
         exit()
     k = int(sys.argv[2])
 
@@ -264,9 +264,9 @@ if __name__ == '__main__':
     numK = getCopNumber()
 
     if numK:
-        print 'The cop number is >', k
+        print('The cop number is >', k)
     else:
-        print 'The cop number is <=', k
+        print('The cop number is <=', k)
 
 G = 0
 k = 0
