@@ -1,4 +1,5 @@
 *.swp
-
+cop_number.egg-info/*
+build/*
 *.pyc
 dist/

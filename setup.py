@@ -1,6 +1,9 @@
-from distutils.core import setup
+import setuptools
 
-setup(
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
+setuptools.setup(
     name = 'cop_number',
     packages = ['cop_number'],
     version = '1.1.2',
